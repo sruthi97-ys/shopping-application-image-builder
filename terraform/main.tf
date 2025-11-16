@@ -37,7 +37,7 @@ resource "aws_instance" "webserver" {
 
   ami                    = data.aws_ami.application_image.image_id
   instance_type          = var.instance_type
-  key_name               = aws_key_pair.authentication_key.key_name
+  key_name               = "devops-sruthi-mumbai"
   vpc_security_group_ids = [aws_security_group.webserver.id]
 
   # Added Subnet ID
