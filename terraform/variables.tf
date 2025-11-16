@@ -34,3 +34,10 @@ variable "subnet_id" {
   description = "Subnet ID for the EC2 instance or resources"
   default     = "subnet-0405019b56d3a7518"
 }
+
+# ✅ Added domain_name variable
+variable "domain_name" {
+  type        = string
+  description = "The domain name for Route53"
+  default     = "solonest.shop"
+}
