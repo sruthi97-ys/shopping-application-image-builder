@@ -1,15 +1,11 @@
----
+name: Deploy infrastructure with Terraform
 
-name: "Deploy infrastructure with terraform"
 on:
- workflow_dispatch  
-
+  workflow_dispatch:   # ✅ Manual trigger via GitHub UI
 
 jobs:
-
-   deploy-infra:
-
-    name: "Deploy with terraform"
+  deploy-infra:
+    name: Deploy with Terraform
     runs-on: ubuntu-latest
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.access_key }}
@@ -17,44 +13,38 @@ jobs:
       AWS_DEFAULT_REGION: "ap-south-1"
       TERRAFORM_VERSION: "1.13.5"
 
-
-    
     steps:
-
-      - name: "Checkout Source Code"
+      - name: Checkout Source Code
         uses: actions/checkout@v4
-
+        id: checkout
 
       - name: Terraform Installation
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION }}
+        id: terraform_setup
 
-
-      
-      - name: Terraform init
+      - name: Terraform Init
+        id: terraform_init
         run: terraform init
         working-directory: ./terraform/
 
-    
-
-      - name: Terraform fmt
+      - name: Terraform Format
+        id: terraform_fmt
         run: terraform fmt
         working-directory: ./terraform/
 
-
-
-      - name: Terraform validate
+      - name: Terraform Validate
+        id: terraform_validate
         run: terraform validate
         working-directory: ./terraform/
- 
 
-      - name: Terraform plan
-        run: terraform plan
+      - name: Terraform Plan
+        id: terraform_plan
+        run: terraform plan -out=tfplan
         working-directory: ./terraform/
 
-
-      - name: Terraform apply
-        run: terraform apply -auto-approve
+      - name: Terraform Apply
+        id: terraform_apply
+        run: terraform apply -auto-approve tfplan
         working-directory: ./terraform/
-
